@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>Code Book : Getting and Cleaning Data Project 1</title>
+
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
+
+
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
+}
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre, img {
+  max-width: 100%;
+}
+pre {
+  overflow-x: auto;
+}
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<h2>Code Book : Getting and Cleaning Data Project 1</h2>
+
+<h4>Data Source and background information</h4>
+
+<p>The data set derives from the Human Activity Recognition database which was made available at <a href="http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones">http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones</a></p>
+
+<p>The database is built from the recordings of 30 subjects performing activities of daily living (ADL) while carrying a waist-mounted smartphone with embedded inertial sensors.</p>
+
+<p>The sensor signals (accelerometer and gyroscope) were pre-processed by applying noise filters and then sampled in fixed-width sliding windows of 2.56 sec and 50% overlap (128 readings/window). The sensor acceleration signal, which has gravitational and body motion components, was separated using a Butterworth low-pass filter into body acceleration and gravity. The gravitational force is assumed to have only low frequency components, therefore a filter with 0.3 Hz cutoff frequency was used. From each window, a vector of features was obtained by calculating variables from the time and frequency domain. See &#39;features_info.txt&#39; for more details.</p>
+
+<h2>Variables information</h2>
+
+<h3>Identifiers for the &#39;subject&#39; and &#39;activity&#39; type are variables labelled in the data set.</h3>
+
+<p><code>subject</code> The ID of the test subject</p>
+
+<p><code>activity</code> The activity performed by the subject</p>
+
+<p>The possible values for the activity variable was originaly <code>1</code> <code>2</code> <code>3</code> <code>4</code> <code>5</code> or <code>6</code>. The activity_labels.txt file shows what each values corresponds to. </p>
+
+<p><code>1</code> = <code>WALKING</code></p>
+
+<p><code>2</code> = <code>WALKING_UPSTAIRS</code></p>
+
+<p><code>3</code> = <code>WALKING_DOWNSTAIRS</code></p>
+
+<p><code>4</code> = <code>SITTING</code></p>
+
+<p><code>5</code> = <code>STANDING</code></p>
+
+<p><code>6</code> = <code>LAYING</code></p>
+
+<p>The numbers have been substituted with the description for the tidyData.txt file.</p>
+
+<p>The features selected for this database come from the accelerometer and gyroscope 3-axial raw signals tAcc-XYZ and tGyro-XYZ. These time domain signals (prefix &#39;t&#39; to denote time) were captured at a constant rate of 50 Hz. Then they were filtered using a median filter and a 3rd order low pass Butterworth filter with a corner frequency of 20 Hz to remove noise. Similarly, the acceleration signal was then separated into body and gravity acceleration signals (tBodyAcc-XYZ and tGravityAcc-XYZ) using another low pass Butterworth filter with a corner frequency of 0.3 Hz. </p>
+
+<p>Subsequently, the body linear acceleration and angular velocity were derived in time to obtain Jerk signals (tBodyAccJerk-XYZ and tBodyGyroJerk-XYZ). Also the magnitude of these three-dimensional signals were calculated using the Euclidean norm (tBodyAccMag, tGravityAccMag, tBodyAccJerkMag, tBodyGyroMag, tBodyGyroJerkMa  g). </p>
+
+<p>Finally a Fast Fourier Transform (FFT) was applied to some of these signals producing fBodyAcc-XYZ, fBodyAccJerk-XYZ, fBodyGyro-XYZ, fBodyAccJerkMag, fBodyGyroMag, fBodyGyroJerkMag. (Note the &#39;f&#39; to indicate frequency domain signals). </p>
+
+<p>These signals were used to estimate variables of the feature vector for each pattern:<br/>
+&#39;-XYZ&#39; is used to denote 3-axial signals in the X, Y and Z directions.</p>
+
+<p><code>tBodyAcc-XYZ</code></p>
+
+<p><code>tGravityAcc-XYZ</code></p>
+
+<p><code>tBodyAccJerk-XYZ</code></p>
+
+<p><code>tBodyGyro-XYZ</code></p>
+
+<p><code>tBodyGyroJerk-XYZ</code></p>
+
+<p><code>tBodyAccMag</code></p>
+
+<p><code>tGravityAccMag</code></p>
+
+<p><code>tBodyAccJerkMag</code></p>
+
+<p><code>tBodyGyroMag</code></p>
+
+<p><code>tBodyGyroJerkMag</code></p>
+
+<p><code>fBodyAcc-XYZ</code></p>
+
+<p><code>fBodyAccJerk-XYZ</code></p>
+
+<p><code>fBodyGyro-XYZ</code></p>
+
+<p><code>fBodyAccMag</code></p>
+
+<p><code>fBodyAccJerkMag</code></p>
+
+<p><code>fBodyGyroMag</code></p>
+
+<p><code>fBodyGyroJerkMag</code></p>
+
+<p>####The set of variables that were estimated from these signals are: </p>
+
+<p>mean(): Mean value</p>
+
+<p>std(): Standard deviation</p>
+
+<p>mad(): Median absolute deviation </p>
+
+<p>max(): Largest value in array</p>
+
+<p>min(): Smallest value in array</p>
+
+<p>sma(): Signal magnitude area</p>
+
+<p>energy(): Energy measure. Sum of the squares divided by the number of values. </p>
+
+<p>iqr(): Interquartile range </p>
+
+<p>entropy(): Signal entropy</p>
+
+<p>arCoeff(): Autorregresion coefficients with Burg order equal to 4</p>
+
+<p>correlation(): correlation coefficient between two signals</p>
+
+<p>maxInds(): index of the frequency component with largest magnitude</p>
+
+<p>meanFreq(): Weighted average of the frequency components to obtain a mean frequency</p>
+
+<p>skewness(): skewness of the frequency domain signal </p>
+
+<p>kurtosis(): kurtosis of the frequency domain signal </p>
+
+<p>bandsEnergy(): Energy of a frequency interval within the 64 bins of the FFT of each window.</p>
+
+<p>angle(): Angle between to vectors.</p>
+
+<h4>Additional vectors obtained by averaging the signals in a signal window sample. These are used on the angle() variable:</h4>
+
+<p><code>gravityMean</code></p>
+
+<p><code>tBodyAccMean</code></p>
+
+<p><code>tBodyAccJerkMean</code></p>
+
+<p><code>tBodyGyroMean</code></p>
+
+<p><code>tBodyGyroJerkMean</code></p>
+
+<h4>Measurements Taken : The complete list of variables of each feature vector</h4>
+
+<h5>The original variables are listed below</h5>
+
+<p><code>tBodyAccMeanX</code></p>
+
+<p><code>tBodyAccMeanY</code></p>
+
+<p><code>tBodyAccMeanZ</code></p>
+
+<p><code>tBodyAccStdX</code></p>
+
+<p><code>tBodyAccStdY</code></p>
+
+<p><code>tBodyAccStdZ</code></p>
+
+<p><code>tGravityAccMeanX</code></p>
+
+<p><code>tGravityAccMeanY</code></p>
+
+<p><code>tGravityAccMeanZ</code></p>
+
+<p><code>tGravityAccStdX</code></p>
+
+<p><code>tGravityAccStdY</code></p>
+
+<p><code>tGravityAccStdZ</code></p>
+
+<p><code>tBodyAccJerkMeanX</code></p>
+
+<p><code>tBodyAccJerkMeanY</code></p>
+
+<p><code>tBodyAccJerkMeanZ</code></p>
+
+<p><code>tBodyAccJerkStdX</code></p>
+
+<p><code>tBodyAccJerkStdY</code></p>
+
+<p><code>tBodyAccJerkStdZ</code></p>
+
+<p><code>tBodyGyroMeanX</code></p>
+
+<p><code>tBodyGyroMeanY</code></p>
+
+<p><code>tBodyGyroMeanZ</code></p>
+
+<p><code>tBodyGyroStdX</code></p>
+
+<p><code>tBodyGyroStdY</code></p>
+
+<p><code>tBodyGyroStdZ</code></p>
+
+<p><code>tBodyGyroJerkMeanX</code></p>
+
+<p><code>tBodyGyroJerkMeanY</code></p>
+
+<p><code>tBodyGyroJerkMeanZ</code></p>
+
+<p><code>tBodyGyroJerkStdX</code></p>
+
+<p><code>tBodyGyroJerkStdY</code></p>
+
+<p><code>tBodyGyroJerkStdZ</code></p>
+
+<p><code>tBodyAccMagMean</code></p>
+
+<p><code>tBodyAccMagStd</code></p>
+
+<p><code>tGravityAccMagMean</code></p>
+
+<p><code>tGravityAccMagStd</code></p>
+
+<p><code>tBodyAccJerkMagMean</code></p>
+
+<p><code>tBodyAccJerkMagStd</code></p>
+
+<p><code>tBodyGyroMagMean</code></p>
+
+<p><code>tBodyGyroMagStd</code></p>
+
+<p><code>tBodyGyroJerkMagMean</code></p>
+
+<p><code>tBodyGyroJerkMagStd</code></p>
+
+<p><code>fBodyAccMeanX</code></p>
+
+<p><code>fBodyAccMeanY</code></p>
+
+<p><code>fBodyAccMeanZ</code></p>
+
+<p><code>fBodyAccStdX</code></p>
+
+<p><code>fBodyAccStdY</code></p>
+
+<p><code>fBodyAccStdZ</code></p>
+
+<p><code>fBodyAccMeanFreqX</code></p>
+
+<p><code>fBodyAccMeanFreqY</code></p>
+
+<p><code>fBodyAccMeanFreqZ</code></p>
+
+<p><code>fBodyAccJerkMeanX</code></p>
+
+<p><code>fBodyAccJerkMeanY</code></p>
+
+<p><code>fBodyAccJerkMeanZ</code></p>
+
+<p><code>fBodyAccJerkStdX</code></p>
+
+<p><code>fBodyAccJerkStdY</code></p>
+
+<p><code>fBodyAccJerkStdZ</code></p>
+
+<p><code>fBodyAccJerkMeanFreqX</code></p>
+
+<p><code>fBodyAccJerkMeanFreqY</code></p>
+
+<p><code>fBodyAccJerkMeanFreqZ</code></p>
+
+<p><code>fBodyGyroMeanX</code></p>
+
+<p><code>fBodyGyroMeanY</code></p>
+
+<p><code>fBodyGyroMeanZ</code></p>
+
+<p><code>fBodyGyroStdX</code></p>
+
+<p><code>fBodyGyroStdY</code></p>
+
+<p><code>fBodyGyroStdZ</code></p>
+
+<p><code>fBodyGyroMeanFreqX</code></p>
+
+<p><code>fBodyGyroMeanFreqY</code></p>
+
+<p><code>fBodyGyroMeanFreqZ</code></p>
+
+<p><code>fBodyAccMagMean</code></p>
+
+<p><code>fBodyAccMagStd</code></p>
+
+<p><code>fBodyAccMagMeanFreq</code></p>
+
+<p><code>fBodyBodyAccJerkMagMean</code></p>
+
+<p><code>fBodyBodyAccJerkMagStd</code></p>
+
+<p><code>fBodyBodyAccJerkMagMeanFreq</code></p>
+
+<p><code>fBodyBodyGyroMagMean</code></p>
+
+<p><code>fBodyBodyGyroMagStd</code></p>
+
+<p><code>fBodyBodyGyroMagMeanFreq</code></p>
+
+<p><code>fBodyBodyGyroJerkMagMean</code></p>
+
+<p><code>fBodyBodyGyroJerkMagStd</code></p>
+
+<p><code>fBodyBodyGyroJerkMagMeanFreq</code></p>
+
+<h4>Further manipulation of variable names</h4>
+
+<p>The features variables have been manipulated in the folliwng way to provide full description</p>
+
+<ul>
+<li>prefix t is replaced by time</li>
+<li>Acc is replaced by Accelerometer</li>
+<li>Gyro is replaced by Gyroscope</li>
+<li>prefix f is replaced by frequency</li>
+<li>Mag is replaced by Magnitude</li>
+<li>BodyBody is replaced by Body</li>
+</ul>
+
+<p>This gives an output of (printed first 10 for example)</p>
+
+<ul>
+<li>timeBodyAccelerometer-mean()-X</li>
+<li>timeBodyAccelerometer-mean()-Y</li>
+<li>timeBodyAccelerometer-mean()-Z</li>
+<li>timeBodyAccelerometer-std()-X</li>
+<li>timeBodyAccelerometer-std()-Y</li>
+<li>timeBodyAccelerometer-std()-Z</li>
+<li>timeGravityAccelerometer-mean()-X</li>
+<li>timeGravityAccelerometer-mean()-Y</li>
+<li>timeGravityAccelerometer-mean()-Z</li>
+<li>timeGravityAccelerometer-std()-X</li>
+</ul>
+
+<p>&hellip;</p>
+
+</body>
+
+</html>
